@@ -60,32 +60,27 @@ export default class Login extends Component{
 
     render() {
         return (
-            <div className="div-form-login">
-                <h1>{this.state.message}</h1>
+            <div className="div-login">
                 <form onSubmit={this.handleInputSubmit}>
-                    <label>
-                        Nome de Usuário:
-                        <input 
-                            type="text"
-                            name="usr_name"
-                            value={this.state.usr_name}
-                            onChange={this.handleInputChange} />
-                    </label>
-                    <br />
-                    <label>
-                        Senha:
-                        <input
-                            type="text"
-                            name="usr_password"
-                            value={this.state.usr_password}
-                            onChange={this.handleInputChange} />
-                    </label>
-                    <br />
-                    <input type="submit" value="Enviar" />
-                    {/* <Link  to={'/'}>Voltar</Link> */}
+                    {this.state.message && <p>{this.state.message}</p>}
+                    <input 
+                        type="text"
+                        placeholder="Usuário"
+                        name="usr_name"
+                        value={this.state.usr_name}
+                        onChange={this.handleInputChange} 
+                    />
+                    <input
+                        type="password"
+                        placeholder="Senha"
+                        name="usr_password"
+                        value={this.state.usr_password}
+                        onChange={this.handleInputChange} 
+                    />
+                    <input className="enviar" type="submit" value="Enviar" />
                 </form>
+
             </div>
-        
         )
     }
 }

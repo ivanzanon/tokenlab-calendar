@@ -3,6 +3,7 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 import Login from "./pages/login";
 import Main from "./pages/main";
+import EventForm from "./pages/form-event";
 
 
 const Routes = () => (
@@ -10,7 +11,7 @@ const Routes = () => (
         <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/main" component={Main} />
-            {/*<Route path="/dishes-form" component={DishForm} /> */}
+            <Route path="/form-event" component={EventForm} />
         </Switch>
     </BrowserRouter>
 );

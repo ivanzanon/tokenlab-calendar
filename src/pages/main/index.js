@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-//import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import { format, parseISO } from 'date-fns';
 
 import "./styles.css";
 import api from '../../services/api';
@@ -24,22 +25,29 @@ export default class Main extends Component{
         this.setState({events: response.data});
     }
 
+    toDate = date_param => {
+        const fmt_date = format(parseISO(date_param), "dd/MM/yyyy");
+        const fmt_hour = format(parseISO(date_param), "hh:mm");
+
+        return `${fmt_date} às ${fmt_hour}`;
+    }
+
     render() {
         return (
             <div className="events-list">
-                <h1>
+                <p>
                     {this.state.username}
-                </h1>
+                </p>
                 {this.state.events.map(event => (
                     <article key={event.id}>
                         <strong>{event.description}</strong>
                         <br />
-                        <strong>{event.start}</strong>
+                        <strong>Início: {this.toDate(event.start)}</strong>
                         <br />
-                        <strong>{event.end}</strong>
+                        <strong>Fim: {this.toDate(event.end)}</strong>
                     </article>
                 ))}
-                {/* <Link to='/form-event' >+</Link> */}
+                <Link to='/form-event' >+</Link>
             </div>
         );
     }
