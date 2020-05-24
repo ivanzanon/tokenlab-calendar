@@ -5,10 +5,10 @@
  * 
  */
 
- import axios from 'axios';
+import axios from 'axios';
 
- const api = axios.create({
+const api = axios.create({
     baseURL: "http://localhost:3002/api"
 })
 
-export default api_o_bosque;
+export default api;
