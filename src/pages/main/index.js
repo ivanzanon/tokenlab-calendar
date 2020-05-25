@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 
 import "./styles.css";
@@ -11,25 +11,37 @@ export default class Main extends Component{
         super(props);
 
         this.state = {
+            message: '',
             username: localStorage.getItem('tokenlabCalendar/username'),
             idUser: localStorage.getItem('tokenlabCalendar/userID'),
-            events: []
+            events: [],
+            id_delete: ''
         }
+
     }
 
     async componentDidMount(req, res) {
         const response = await api.get(`/calendar/${this.state.idUser}`);
+        this.setState({events: response.data});
+    }
 
-        console.log(response.data);
-
+    async componentDidUpdate(req, res) {
+        const response = await api.get(`/calendar/${this.state.idUser}`);
         this.setState({events: response.data});
     }
 
     toDate = date_param => {
         const fmt_date = format(parseISO(date_param), "dd/MM/yyyy");
-        const fmt_hour = format(parseISO(date_param), "hh:mm");
+        const fmt_hour = format(parseISO(date_param), "HH:mm");
 
         return `${fmt_date} às ${fmt_hour}`;
+    }
+
+    deletar = async id => {
+        const result = await api.delete(`/events/${id}`);
+        if (result.data.number > 0) {
+            this.setState({message: 'Registro excluído com sucesso'});
+        }
     }
 
     render() {
@@ -38,16 +50,32 @@ export default class Main extends Component{
                 <p>
                     {this.state.username}
                 </p>
-                {this.state.events.map(event => (
-                    <article key={event.id}>
-                        <strong>{event.description}</strong>
-                        <br />
-                        <strong>Início: {this.toDate(event.start)}</strong>
-                        <br />
-                        <strong>Fim: {this.toDate(event.end)}</strong>
+                <p>
+                    {this.state.message}
+                </p>
+                <Link className="adicionar" to='/form-event/0' >+</Link>
+                {this.state.events.map(eve => (
+                    <article key={eve.id}>
+                        <div className="info">
+                            <strong>{eve.description}</strong>
+                            <br />
+                            <strong>Início: {this.toDate(eve.start)}</strong>
+                            <br />
+                            <strong>Fim: {this.toDate(eve.end)}</strong>
+                        </div>
+                        <div className="operatos">
+                            <button 
+                                onClick={ () => {
+                                        this.deletar(eve.id);
+                                    }
+                                }>Excluir</button>
+                            <Link
+                                to={`/form-event/${eve.id}`}>
+                                Alterar
+                            </Link>
+                        </div>
                     </article>
                 ))}
-                <Link to='/form-event' >+</Link>
             </div>
         );
     }
