@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-//import {Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import "./styles.css";
 import api from '../../services/api';
@@ -33,10 +33,13 @@ export default class Login extends Component{
         event.preventDefault();
 
         const data = await this.login();
+
+        console.log(data);
         
-        if (data.result === 1) {
+        if (data.auth) {
             localStorage.setItem("tokenlabCalendar/username", this.state.usr_name);
             localStorage.setItem("tokenlabCalendar/userID", data.idUser);
+            localStorage.setItem("tokenlabCalendar/token", data.token);
             this.props.history.push("/main");
         } else {
             this.setState({
@@ -50,7 +53,7 @@ export default class Login extends Component{
 
         const { data } = await api.post("/login", 
             {
-                name: this.state.usr_name,
+                login: this.state.usr_name,
                 password: this.state.usr_password
             }
         );
@@ -79,6 +82,8 @@ export default class Login extends Component{
                     />
                     <input className="enviar" type="submit" value="Enviar" />
                 </form>
+
+                <Link to="/signin">SignIn</Link>
 
             </div>
         )

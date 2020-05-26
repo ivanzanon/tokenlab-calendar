@@ -21,8 +21,19 @@ export default class Main extends Component{
     }
 
     async componentDidMount(req, res) {
-        const response = await api.get(`/calendar/${this.state.idUser}`);
-        this.setState({events: response.data});
+        const token = localStorage.getItem('tokenlabCalendar/token');
+        const authString = 'Bearer '.concat(token);
+        try{
+            const response = await api.get(`/calendar/${this.state.idUser}`, 
+                {headers: 
+                    { Authorization: authString }
+                }
+            );
+
+            this.setState({events: response.data});
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     async componentDidUpdate(req, res) {
@@ -69,7 +80,7 @@ export default class Main extends Component{
                                         this.deletar(eve.id);
                                     }
                                 }>Excluir</button>
-                            <Link
+                            <Link className="botao-alterar"
                                 to={`/form-event/${eve.id}`}>
                                 Alterar
                             </Link>
