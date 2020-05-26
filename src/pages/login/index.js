@@ -37,13 +37,12 @@ export default class Login extends Component{
         console.log(data);
         
         if (data.auth) {
-            localStorage.setItem("tokenlabCalendar/username", this.state.usr_name);
             localStorage.setItem("tokenlabCalendar/userID", data.idUser);
             localStorage.setItem("tokenlabCalendar/token", data.token);
             this.props.history.push("/main");
         } else {
             this.setState({
-                message: "Erro na senha tenta de novo!"
+                message: "Usuário ou Senhas Inválidos."
             })
         }
         

@@ -12,7 +12,7 @@ export default class Main extends Component{
 
         this.state = {
             message: '',
-            username: localStorage.getItem('tokenlabCalendar/username'),
+            username: '',
             idUser: localStorage.getItem('tokenlabCalendar/userID'),
             events: [],
             id_delete: ''
@@ -21,14 +21,26 @@ export default class Main extends Component{
     }
 
     async componentDidMount(req, res) {
+        
         const token = localStorage.getItem('tokenlabCalendar/token');
-        const authString = 'Bearer '.concat(token);
+        console.log('Token: '.concat(token));
+        if (token == null || token === '') {
+            this.props.history.push('/');
+        }
+
+        console.log('Pegando nome do Usuário');
         try{
-            const response = await api.get(`/calendar/${this.state.idUser}`, 
-                {headers: 
-                    { Authorization: authString }
-                }
-            );
+            const response = await api.get(`/users/${this.state.idUser}`, this.getTokenHeader(token));
+            console.log(response);
+            const data = response.data;
+            this.setState({username: data.name});
+        } catch(error) {
+            console.log(error);
+        }
+
+        console.log('Pegando eventos');
+        try{
+            const response = await api.get(`/calendar/${this.state.idUser}`, this.getTokenHeader(token));
 
             this.setState({events: response.data});
         } catch(error) {
@@ -37,8 +49,14 @@ export default class Main extends Component{
     }
 
     async componentDidUpdate(req, res) {
-        const response = await api.get(`/calendar/${this.state.idUser}`);
-        this.setState({events: response.data});
+    }
+
+    getTokenHeader = token => {
+        const authString = 'Bearer '.concat(token);
+        
+        return {
+            headers: {Authorization: authString}
+        }
     }
 
     toDate = date_param => {
@@ -53,6 +71,18 @@ export default class Main extends Component{
         if (result.data.number > 0) {
             this.setState({message: 'Registro excluído com sucesso'});
         }
+
+        const token = localStorage.getItem('tokenlabCalendar/token');
+        const response = await api.get(`/calendar/${this.state.idUser}`, this.getTokenHeader(token));
+        this.setState({events: response.data});
+    }
+
+    logoutHandler = event => {
+        event.preventDefault();
+        console.log('Tentou logout');
+        localStorage.removeItem('tokenlabCalendar/userID');
+        localStorage.removeItem('tokenlabCalendar/token');
+        this.props.history.push('/');
     }
 
     render() {
@@ -61,6 +91,8 @@ export default class Main extends Component{
                 <p>
                     {this.state.username}
                 </p>
+                    <button 
+                        onClick={this.logoutHandler}>LogOut</button>
                 <p>
                     {this.state.message}
                 </p>
@@ -77,9 +109,9 @@ export default class Main extends Component{
                         <div className="operatos">
                             <button 
                                 onClick={ () => {
-                                        this.deletar(eve.id);
-                                    }
-                                }>Excluir</button>
+                                    this.deletar(eve.id);
+                                }
+                                }>Excluir</button>                            
                             <Link className="botao-alterar"
                                 to={`/form-event/${eve.id}`}>
                                 Alterar
