@@ -1,0 +1,55 @@
+div.div-signin {
+    max-width: 700px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+p {
+  color: #8d5151;
+  margin-bottom: 15px;
+  border: 1px solid #ff3333;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+}
+input {
+  flex: 1;
+  height: 46px;
+  margin-bottom: 15px;
+  padding: 0 20px;
+  color: #777;
+  font-size: 15px;
+  width: 100%;
+  border: 1px solid #ddd;
+  &::placeholder {
+    color: #999;
+  }
+}
+input.enviar {
+  color: #fff;
+  font-size: 16px;
+  background: silver;
+  height: 56px;
+  border: 0;
+  border-radius: 5px;
+  width: 100%;
+  transition: all 0.2s;
+}
+input.enviar:hover{
+    background: #777;
+    color: white;
+}
+hr {
+  margin: 20px 0;
+  border: none;
+  border-bottom: 1px solid #cdcdcd;
+  width: 100%;
+}
+a {
+  font-size: 16;
+  font-weight: bold;
+  color: #999;
+  text-decoration: none;
+}
