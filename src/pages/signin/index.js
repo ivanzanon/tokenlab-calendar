@@ -18,13 +18,18 @@ export default class SignIn extends Component {
     handleInputSubmit = async (event) => {
         event.preventDefault();
 
-        const data = await this.signIn();
+        const result = await api.post("/userExists", { login: this.state.usr_login });
 
-        this.props.history.push('/');
+        if (result.data.exists) {
+            this.setState({ message: 'Usuário já cadastrado.'});
+        } else {
+            const data = await this.signIn();
+            this.props.history.push('/');
+        }
     }
 
     signIn = async () => {
-        
+
         const data = api.post("/users", {
             name: this.state.usr_name,
             login: this.state.usr_login,
@@ -48,6 +53,7 @@ export default class SignIn extends Component {
                         placeholder="Usuário"
                         name="usr_login"
                         onChange={e => this.setState({usr_login: e.target.value}) }
+                        onLostPointerCapture={ e => alert("Saiu!")}
                     />
                     <input
                         type="password"
