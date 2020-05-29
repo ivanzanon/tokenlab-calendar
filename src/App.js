@@ -7,7 +7,7 @@ import Routes from './router.js'
 function App() {
   return (
     <div className="App">
-      <Header />
+      <Header descricao='Calendário bonitão!'/>
       <Routes />
         {/* <Footer /> */}
     </div>
