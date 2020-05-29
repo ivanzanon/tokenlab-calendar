@@ -71,8 +71,10 @@ export default class Main extends Component{
 
     mountCalendarObject = () => {
         //Montagem o calendário
-        const firstDOTM = startOfMonth(Date.now());
-        const lastDOTM = endOfMonth(Date.now());
+        const data_i = parseISO(`${this.state.year}-0${this.state.month}-02`);
+
+        const firstDOTM = startOfMonth(data_i);
+        const lastDOTM = endOfMonth(data_i);
  
         var actualDOTM = firstDOTM;
 
@@ -102,9 +104,11 @@ export default class Main extends Component{
 
     getEvents = async () => {
         const token = this.state.token;
+        const date_format = `${this.state.year}-0${this.state.month}-02`;
+        console.log(date_format);
         try{
             const params = {
-                date: '2020-05-02',
+                date: date_format,
                 user: this.state.idUser
             };
             const response = await api.post(`/calendar/`, params);
@@ -208,7 +212,12 @@ export default class Main extends Component{
                     <Paper>
                         <ComboMonth
                             value={this.state.month}
-                            changeHandler={e => this.setState({month : e.target.value})} />
+                            changeHandler={async e => {
+                                await this.setState({month : e.target.value});
+                                await this.getEvents();
+                                this.mountCalendarObject();
+                            }
+                            } />
                         <ComboYear
                             value={this.state.year}
                             changeHandler={e => this.setState({year : e.target.value})} />
