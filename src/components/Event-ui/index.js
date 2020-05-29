@@ -3,7 +3,7 @@
  * 
  * @description Component for Event forms
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -35,15 +35,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function EventFormUi(props) {
     const classes = useStyles();
-
+    
     const formatDateDefault = date => format(date, "yyyy-MM-dd'T'HH:mm");
-
+    
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState(formatDateDefault(Date.now()));
     const [endDate, setEndDate] = useState(formatDateDefault(Date.now()));
     const [idUser, setIdUser] = useState(0);
+    
+    const getEvent = async id => {
+        const apiResponse = await api.get(`/events/${id}`);
+        const data = apiResponse.data;
+
+        setDescription(data.description);
+        setStartDate(formatDateDefault(Date.parse(data.start)));
+        setEndDate(formatDateDefault(Date.parse(data.end)));
+
+        console.log(data.start);
+        console.log(startDate);
+    }
+
+    useEffect(() => {
+        if (props.eventId > 0) {
+            getEvent(props.eventId);
+        }
+        console.log('=========== props.evenid');
+    
+        console.log(props.eventId);
+    }, [props.eventId]);
 
     const eventUser = 
         {

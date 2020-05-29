@@ -4,7 +4,7 @@
  * @description Component that is a Combo with all the months of the year
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -35,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EventFormUi(props) {
 
+  const classes = useStyles();
+
     return(
-        <TextField
+        <TextField className={classes.root}
             id="standard-select-currency"
             select
             label="Mês"

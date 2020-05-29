@@ -4,7 +4,7 @@
  * @description Component for a Combo with Year from 2000 to 2100
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -30,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
   };
 
 export default function EventFormUi(props) {
-
-    return(
-        <TextField
+  
+  const classes = useStyles();
+  
+  return(
+        <TextField className={classes.root}
             id="standard-select-currency"
             select
             label="Ano"
