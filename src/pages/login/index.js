@@ -97,7 +97,8 @@ export default class Login extends Component{
                 usernameHandler={this.handleChangeUserName}
                 passwordHandler={this.handleChangePassword}
                 loginHandler={this.handleInputSubmit} 
-                signupHandler={this.routeToSignIn}/>
+                signupHandler={this.routeToSignIn}
+                message={this.state.message}/>
 
         )
     }

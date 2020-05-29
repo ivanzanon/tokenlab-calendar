@@ -3,6 +3,7 @@
  * 
  * @description Main page of the Calendar Application. Shows the Calendar and Manges Events.
  * 
+ * @todo error Handling
  */
 
 import React, { Component } from 'react';
@@ -42,7 +43,7 @@ export default class Main extends Component{
             id_delete: '',
             checked: false,
             calendar: [],
-            month: getMonth(Date.now()),
+            month: getMonth(Date.now())+1,
             year: getYear(Date.now()),
             idEvent: 0
         }
@@ -79,6 +80,7 @@ export default class Main extends Component{
         //Montagem o calendário
         const data_i = parseISO(`${this.state.year}-0${this.state.month}-02`);
 
+        // Defining First and Last Day Of The Month
         const firstDOTM = startOfMonth(data_i);
         const lastDOTM = endOfMonth(data_i);
  
@@ -88,23 +90,25 @@ export default class Main extends Component{
 
         const eventList = this.state.events;
 
+        // While Actual Date is before the Last Date
         while (isBefore(actualDOTM, lastDOTM)) {
             
+            // Filter the events whose start is in the same day as Actual Date
             const filteredList = eventList.filter(item => 
                format(parseISO(item.start), "dd/MM/yyyy") === format(actualDOTM, "dd/MM/yyyy")
             );
 
+            // Set the array with the Day, the Date, and the Events of this day
             arrDays.push({
                     day: format(actualDOTM, "dd"),
                     date: format(actualDOTM, "dd/MM/yyyy"),
                     events: filteredList
                 });
 
+            // Goes to the next Day
             actualDOTM = addDays(actualDOTM, 1);
         }
 
-        console.log(eventList);
-        console.log(arrDays);
         this.setState({calendar: arrDays});
     }
 
@@ -117,13 +121,14 @@ export default class Main extends Component{
                 date: date_format,
                 user: this.state.idUser
             };
-            const response = await api.post(`/calendar/`, this.getTokenHeader(token), params);
+            const response = await api.post(`/calendar/`, params, this.getTokenHeader(token));
             this.setState({events: response.data});
         } catch(error) {
             console.log(error);
         }
     }
 
+    // Define the header for Authorization with the actual token
     getTokenHeader = token => {
         const authString = 'Bearer '.concat(token);
         
@@ -168,6 +173,7 @@ export default class Main extends Component{
 
     afterSubmit = async () => { 
         this.setState({checked: false});
+        this.setState({idEvent: 0});
         await this.getEvents();
         this.mountCalendarObject();
     }
@@ -212,6 +218,7 @@ export default class Main extends Component{
                         idUser={this.state.idUser}
                         afterSubmit={this.afterSubmit}
                         eventId={this.state.idEvent}/>
+
                 </Collapse>
 
                 <div className='events-list'>

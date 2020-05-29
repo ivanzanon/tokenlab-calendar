@@ -46,6 +46,9 @@ export default function LoginUi(props) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
+        <Typography component="h1" variant="h3">
+          {props.message}
+        </Typography>
         <Typography component="h1" variant="h5">
           Calendário de Eventos
         </Typography>
