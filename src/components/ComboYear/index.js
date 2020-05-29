@@ -1,3 +1,9 @@
+/**
+ * @author Ivan Zanon
+ * 
+ * @description Component for a Combo with Year from 2000 to 2100
+ */
+
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';

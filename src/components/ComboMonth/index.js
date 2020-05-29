@@ -1,3 +1,9 @@
+/**
+ * @author Ivan Zanon
+ * 
+ * @description Component that is a Combo with all the months of the year
+ */
+
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';

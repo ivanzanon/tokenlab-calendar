@@ -1,3 +1,9 @@
+/**
+ * @author Ivan Zanon
+ * 
+ * @description LogIn Page
+ */
+
 import React, {Component} from 'react';
 
 import "./styles.css";
@@ -92,51 +98,6 @@ export default class Login extends Component{
                 passwordHandler={this.handleChangePassword}
                 loginHandler={this.handleInputSubmit} 
                 signupHandler={this.routeToSignIn}/>
-            // <div className="div-login">
-            //     <form onSubmit={this.handleInputSubmit}>
-            //         {this.state.message && <p>{this.state.message}</p>}
-            //         <input 
-            //             type="text"
-            //             placeholder="Usuário"
-            //             name="usr_name"
-            //             value={this.state.usr_name}
-            //             onChange={this.handleInputChange} 
-            //         />
-            //         <input
-            //             type="password"
-            //             placeholder="Senha"
-            //             name="usr_password"
-            //             value={this.state.usr_password}
-            //             onChange={this.handleInputChange} 
-            //         />
-            //         <Button onClick={this.handleInputSubmit} variant="contained" color="primary">Enviar</Button>
-            //         <Button onClick={this.routeToSignIn}  variant="contained" color="primary">SignIn</Button>
-            //     </form>
-
-
-            // </div>
-
-                // <div className="form-structor">
-            //     <div className="signup">
-            //         <h2 className="form-title" id="signup"><span>or</span>Sign up</h2>
-            //         <div className="form-holder">
-            //             <input type="text" className="input" placeholder="Name" />
-            //             <input type="email" className="input" placeholder="Email" />
-            //             <input type="password" className="input" placeholder="Password" />
-            //         </div>
-            //         <button className="submit-btn">Sign up</button>
-            //     </div>
-            //     <div className="login slide-up">
-            //         <div className="center">
-            //             <h2 className="form-title" id="login"><span>or</span>Log in</h2>
-            //             <div className="form-holder">
-            //                 <input type="email" className="input" placeholder="Email" />
-            //                 <input type="password" className="input" placeholder="Password" />
-            //             </div>
-            //             <button class="submit-btn">Log in</button>
-            //         </div>
-            //     </div>
-            // </div>
 
         )
     }
