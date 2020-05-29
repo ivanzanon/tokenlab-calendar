@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EventFormUi(props) {
     const classes = useStyles();
 
-    const formatDateDefault = date =>  format(date, "yyyy-MM-dd'T'hh:mm");
+    const formatDateDefault = date => format(date, "yyyy-MM-dd'T'HH:mm");
 
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState(formatDateDefault(Date.now()));
@@ -64,7 +64,7 @@ export default function EventFormUi(props) {
         if (props.eventId === 0) {
             await api.post('/events', event_ts);
         } else {
-            await api.put(`/events/${this.state.eventID}`, event_ts);
+            await api.put(`/events/${props.eventId}`, event_ts);
         }
 
         setDescription('');

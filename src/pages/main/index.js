@@ -4,11 +4,13 @@ import { format,
         startOfMonth, 
         endOfMonth,
         isBefore,
-        addDays
+        addDays, getMonth, getYear
         } from 'date-fns';
 import "./styles.css";
 import api from '../../services/api';
 import EventFormUi from '../../components/Event-ui';
+import ComboMonth from '../../components/ComboMonth';
+import ComboYear from '../../components/ComboYear';
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddIcon from '@material-ui/icons/Add';
@@ -16,10 +18,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 
 export default class Main extends Component{
 
@@ -30,11 +31,14 @@ export default class Main extends Component{
             message: '',
             username: '',
             idUser: localStorage.getItem('tokenlabCalendar/userID'),
+            token: localStorage.getItem('tokenlabCalendar/token'),
             events: [],
             id_delete: '',
-            token: localStorage.getItem('tokenlabCalendar/token'),
             checked: false,
-            calendar: []
+            calendar: [],
+            month: getMonth(Date.now()),
+            year: getYear(Date.now()),
+            idEvent: 0
         }
 
     }
@@ -42,6 +46,7 @@ export default class Main extends Component{
     async componentDidMount(req, res) {
         
         const token = this.state.token;
+        console.log(this.state);
 
         if (token == null || token === '') {
             this.props.history.push('/');
@@ -65,7 +70,7 @@ export default class Main extends Component{
     }
 
     mountCalendarObject = () => {
-        console.log("================MONTANADO CALENDARIO ========================");
+        //Montagem o calendário
         const firstDOTM = startOfMonth(Date.now());
         const lastDOTM = endOfMonth(Date.now());
  
@@ -98,7 +103,11 @@ export default class Main extends Component{
     getEvents = async () => {
         const token = this.state.token;
         try{
-            const response = await api.get(`/calendar/${this.state.idUser}`, this.getTokenHeader(token));
+            const params = {
+                date: '2020-05-02',
+                user: this.state.idUser
+            };
+            const response = await api.post(`/calendar/`, params);
             this.setState({events: response.data});
         } catch(error) {
             console.log(error);
@@ -122,11 +131,14 @@ export default class Main extends Component{
 
     deletar = async id => {
         const result = await api.delete(`/events/${id}`);
-        if (result.data.number > 0) {
-            this.setState({message: 'Registro excluído com sucesso'});
-        }
 
-        this.getEvents();
+        await this.getEvents();
+        this.mountCalendarObject();
+    }
+
+    editHandler = async id => {
+        this.setState({idEvent : id});
+        this.setState({checked : true});
     }
 
     logoutHandler = event => {
@@ -144,9 +156,9 @@ export default class Main extends Component{
         console.log(this.state.checked);
     }
 
-    afterSubmit = () => { 
+    afterSubmit = async () => { 
         this.setState({checked: false});
-        this.getEvents();
+        await this.getEvents();
         this.mountCalendarObject();
     }
 
@@ -154,13 +166,27 @@ export default class Main extends Component{
         return (
             <div className="events-list">
 
-                {/* // Friendly User Name */}
-                <Typography variant="h2">
-                    {this.state.username}
-                </Typography>
-                <p>
-                    {this.state.message}
-                </p>
+                <Grid container >
+                    <Grid item xs={11}>
+                        {/* // Friendly User Name */}
+                        <Typography variant="h2">
+                            {this.state.username}
+                        </Typography>
+                        <p>
+                            {this.state.message}
+                        </p>
+                    </Grid>
+                    <Grid item xs={1}>
+                        {/* //Logout Button */}
+                        <IconButton 
+                            variant="contained"
+                            color="primary"
+                            onClick={this.logoutHandler}>
+                            <ExitToAppIcon fontSize="small" />
+                        </IconButton>
+
+                    </Grid>
+                </Grid>
 
                 {/* //Controls to Event Form */}
                 <IconButton 
@@ -169,27 +195,25 @@ export default class Main extends Component{
                     onClick={this.formShowHandler}>
                     <AddIcon fontSize="large" />
                 </IconButton>
-                <FormControlLabel
-                    control={<Switch checked={this.state.checked} 
-                        onChange={this.formShowHandler} />}
-                    label=""
-                />
-
-                {/* //Logout Button */}
-                <IconButton 
-                    variant="contained"
-                    color="primary"
-                    onClick={this.logoutHandler}>
-                    <ExitToAppIcon fontSize="large" />
-                </IconButton>
 
                 {/* //Form with Event data */}
                 <Collapse in={this.state.checked} >
                     <EventFormUi 
-                        eventId={0}
                         idUser={this.state.idUser}
-                        afterSubmit={this.afterSubmit}/>
+                        afterSubmit={this.afterSubmit}
+                        eventId={this.state.idEvent}/>
                 </Collapse>
+
+                <div className='events-list'>
+                    <Paper>
+                        <ComboMonth
+                            value={this.state.month}
+                            changeHandler={e => this.setState({month : e.target.value})} />
+                        <ComboYear
+                            value={this.state.year}
+                            changeHandler={e => this.setState({year : e.target.value})} />
+                    </Paper>
+                </div>
 
                 {/* // List of Days */}
                 {this.state.calendar.map(day => (
@@ -220,7 +244,10 @@ export default class Main extends Component{
                                                 </IconButton>
                                                 <IconButton 
                                                     variant="contained"
-                                                    color="primary" >
+                                                    color="primary" 
+                                                    onClick={() => {
+                                                        this.editHandler(eve.id);
+                                                    }}>
                                                     <EditIcon fontSize="small" />
                                                 </IconButton>
                                             </Grid>
@@ -231,38 +258,6 @@ export default class Main extends Component{
                         </ Grid>
                     </Paper>
                 ))}
-
-
-                {/* {this.state.events.map(eve => (
-                    <Paper key={eve.id}>
-                        <div className="info">
-                            <strong>{eve.description}</strong>
-                            <br />
-                            <strong>Início: {this.toDate(eve.start)}</strong>
-                            <br />
-                            <strong>Fim: {this.toDate(eve.end)}</strong>
-                        </div>
-                        <div className="operatos">
-                            <IconButton 
-                                variant="contained"
-                                color="primary"
-                                onClick={() => {
-                                    this.deletar(eve.id);
-                                }}>
-                                <DeleteIcon fontSize="default" />
-                            </IconButton>
-                            <IconButton 
-                                variant="contained"
-                                color="primary" >
-                                <EditIcon fontSize="default" />
-                            </IconButton>
-                             <Link className="botao-alterar"
-                                to={`/form-event/${eve.id}`}>
-                                Alterar
-                            </Link>
-                        </div>
-                    </Paper>
-                ))} */}
             </div>
         );
     }
