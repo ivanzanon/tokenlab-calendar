@@ -25,14 +25,14 @@ import SignUpUi from '../../components/SignUp-ui';
         if (result.data.exists) {
             this.setState({ message: 'Usuário já cadastrado.'});
         } else {
-            const data = await this.signIn();
+            await this.signIn();
             this.props.history.push('/');
         }
     }
 
     signIn = async () => {
 
-        const data = api.post("/users", {
+        api.post("/users", {
             name: this.state.usr_name,
             login: this.state.usr_login,
             password: this.state.usr_password

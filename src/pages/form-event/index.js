@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import "./styles.css";
 import api from '../../services/api';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 export default class FormEvent extends Component{
 
