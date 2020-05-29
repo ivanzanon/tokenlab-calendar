@@ -7,9 +7,7 @@ import Routes from './router.js'
 function App() {
   return (
     <div className="App">
-      <Header />
       <Routes />
-        {/* <Footer /> */}
     </div>
   );
 }
