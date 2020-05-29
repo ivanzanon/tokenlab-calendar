@@ -1,3 +1,8 @@
+/**
+ * @author Ivan Zanon
+ * 
+ * @description Component for Event forms
+ */
 import React, { useState } from 'react';
 import api from '../../services/api';
 import 'date-fns';

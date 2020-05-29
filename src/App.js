@@ -1,8 +1,12 @@
+/**
+ * 
+ * @author Ivan Zanon
+ * 
+ */
+
 import React from 'react';
 import './style.css';
-import Header from './components/Header';
 import Routes from './router.js'
-// import Footer from './components/Footer';
 
 function App() {
   return (

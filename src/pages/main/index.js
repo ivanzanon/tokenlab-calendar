@@ -1,3 +1,10 @@
+/**
+ * @author Ivan Zanon
+ * 
+ * @description Main page of the Calendar Application. Shows the Calendar and Manges Events.
+ * 
+ */
+
 import React, { Component } from 'react';
 import { format, 
         parseISO, 
@@ -20,7 +27,6 @@ import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 
 export default class Main extends Component{
 
@@ -111,7 +117,7 @@ export default class Main extends Component{
                 date: date_format,
                 user: this.state.idUser
             };
-            const response = await api.post(`/calendar/`, params);
+            const response = await api.post(`/calendar/`, this.getTokenHeader(token), params);
             this.setState({events: response.data});
         } catch(error) {
             console.log(error);
