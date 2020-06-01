@@ -13,8 +13,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { format } from 'date-fns';
+import { format, isBefore, parseISO } from 'date-fns';
 import { MuiPickersUtilsProvider, } from '@material-ui/pickers';
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,8 +34,10 @@ const useStyles = makeStyles((theme) => ({
     stroke: theme.palette.divider,
     strokeWidth: 1,
   },
+  errorColor: {
+      color: theme.palette.error.dark
+  }
 }));
-
 
 export default function EventFormUi(props) {
     const classes = useStyles();
@@ -44,7 +47,7 @@ export default function EventFormUi(props) {
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState(formatDateDefault(Date.now()));
     const [endDate, setEndDate] = useState(formatDateDefault(Date.now()));
-    const [idUser, setIdUser] = useState(0);
+    const [message, setMessage] = useState('');
     
     const getEvent = async id => {
         const apiResponse = await api.get(`/events/${id}`);
@@ -54,17 +57,12 @@ export default function EventFormUi(props) {
         setStartDate(formatDateDefault(Date.parse(data.start)));
         setEndDate(formatDateDefault(Date.parse(data.end)));
 
-        console.log(data.start);
-        console.log(startDate);
     }
 
     useEffect(() => {
         if (props.eventId > 0) {
             getEvent(props.eventId);
         }
-        console.log('=========== props.evenid');
-    
-        console.log(props.eventId);
     }, [props.eventId]);
 
     const eventUser = 
@@ -78,28 +76,31 @@ export default function EventFormUi(props) {
     const handleInputSubmit = async event => {
         event.preventDefault();
 
-        console.log(eventUser);
-        console.log(description);
-
-        const event_ts = {
-            description: description,
-            idUser: props.idUser,
-            start: startDate,
-            end: endDate
-        };
-
-        if (props.eventId === 0) {
-            await api.post('/events', event_ts);
+        if (isBefore(parseISO(endDate), parseISO(startDate))) {
+            setMessage('O fim do evento deve ser após o início.');
+            
         } else {
-            await api.put(`/events/${props.eventId}`, event_ts);
-        }
+            const event_ts = {
+                description: description,
+                idUser: props.idUser,
+                start: startDate,
+                end: endDate
+            };
 
-        setDescription('');
-        setStartDate(formatDateDefault(Date.now()));
-        setEndDate(formatDateDefault(Date.now()));
-
-        if (props.afterSubmit != null) {
-            props.afterSubmit();
+            if (props.eventId === 0) {
+                await api.post('/events', event_ts);
+            } else {
+                await api.put(`/events/${props.eventId}`, event_ts);
+            }
+            
+            setDescription('');
+            setStartDate(formatDateDefault(Date.now()));
+            setEndDate(formatDateDefault(Date.now()));
+            setMessage('');
+            
+            if (props.afterSubmit != null) {
+                props.afterSubmit();
+            }
         }
 
     }
@@ -110,9 +111,11 @@ export default function EventFormUi(props) {
         <div className={classes.paper}>
             <form 
                 className={classes.form} 
-                noValidate 
                 onSubmit={handleInputSubmit}
             >
+            <Typography component="h1" variant="h6" className={classes.errorColor}>
+                {message}
+            </Typography>
             <Grid container spacing={0} alignItems="flex-end" >
                 <Grid item xs={12}>
                     <TextField

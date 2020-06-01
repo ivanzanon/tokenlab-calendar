@@ -15,10 +15,13 @@ import { format,
         addDays, getMonth, getYear
         } from 'date-fns';
 import "./styles.css";
+
 import api from '../../services/api';
 import EventFormUi from '../../components/Event-ui';
 import ComboMonth from '../../components/ComboMonth';
 import ComboYear from '../../components/ComboYear';
+import LogOutButton from '../../components/LogOutButton';
+
 import IconButton from '@material-ui/core/IconButton';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddIcon from '@material-ui/icons/Add';
@@ -53,16 +56,14 @@ export default class Main extends Component{
     async componentDidMount(req, res) {
         
         const token = this.state.token;
-        console.log(this.state);
 
         if (token == null || token === '') {
             this.props.history.push('/');
         }
 
-        // Recovering friendly user name from API
+        // COMPONENT CANDIDATE: Recovering friendly user name from API
         try{
             const response = await api.get(`/users/${this.state.idUser}`, this.getTokenHeader(token));
-            console.log(response);
             const data = response.data;
             this.setState({username: data.name});
         } catch(error) {
@@ -71,13 +72,12 @@ export default class Main extends Component{
 
         // Recovering events from API
         await this.getEvents();
-
         this.mountCalendarObject();
 
     }
 
     mountCalendarObject = () => {
-        //Montagem o calendário
+        //Mounting Calendar
         const data_i = parseISO(`${this.state.year}-0${this.state.month}-02`);
 
         // Defining First and Last Day Of The Month
@@ -130,7 +130,7 @@ export default class Main extends Component{
 
     // Define the header for Authorization with the actual token
     getTokenHeader = token => {
-        const authString = 'Bearer '.concat(token);
+        const authString = `Bearer ${token}`;
         
         return {
             headers: {Authorization: authString}
@@ -156,11 +156,7 @@ export default class Main extends Component{
         this.setState({checked : true});
     }
 
-    logoutHandler = event => {
-        event.preventDefault();
-        console.log('Tentou logout');
-        localStorage.removeItem('tokenlabCalendar/userID');
-        localStorage.removeItem('tokenlabCalendar/token');
+    logoutRouteHandler = () => {
         this.props.history.push('/');
     }
 
@@ -188,19 +184,10 @@ export default class Main extends Component{
                         <Typography variant="h2">
                             {this.state.username}
                         </Typography>
-                        <p>
-                            {this.state.message}
-                        </p>
                     </Grid>
                     <Grid item xs={1}>
                         {/* //Logout Button */}
-                        <IconButton 
-                            variant="contained"
-                            color="primary"
-                            onClick={this.logoutHandler}>
-                            <ExitToAppIcon fontSize="small" />
-                        </IconButton>
-
+                        <LogOutButton routeHandler={this.logoutRouteHandler}/>
                     </Grid>
                 </Grid>
 
