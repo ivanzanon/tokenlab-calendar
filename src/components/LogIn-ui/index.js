@@ -3,7 +3,7 @@
  * 
  * @description Component for Login forms
  */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -34,10 +34,19 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  errorColor: {
+    color: theme.palette.error.dark
+  }
 }));
 
 export default function LoginUi(props) {
   const classes = useStyles();
+
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setMessage(props.message);
+  }, [props.message]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -46,11 +55,11 @@ export default function LoginUi(props) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h3">
-          {props.message}
-        </Typography>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4">
           Calendário de Eventos
+        </Typography>
+        <Typography component="h1" variant="h6" className={classes.errorColor}>
+          {message}
         </Typography>
         <form className={classes.form} noValidate onSubmit={props.loginHandler}>
           <TextField

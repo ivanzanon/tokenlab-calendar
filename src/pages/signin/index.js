@@ -58,6 +58,7 @@ import SignUpUi from '../../components/SignUp-ui';
                 usernameHandler={e => this.setState({usr_login: e.target.value})}
                 passwordHandler={e => this.setState({usr_password: e.target.value})}
                 loginRouteHandler={e => this.props.history.push('/')}
+                message={this.state.message}
             />
 
          )

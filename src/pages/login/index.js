@@ -21,23 +21,11 @@ export default class Login extends Component{
             usr_password: ""
         };
 
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleInputSubmit = this.handleInputSubmit.bind(this);
 
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
     handleChangePassword = event => {
-        console.log('Handler do Password');
         const target = event.target;
         const value = target.value;
         this.setState({
@@ -46,7 +34,6 @@ export default class Login extends Component{
     }
 
     handleChangeUserName = event => {
-        console.log('Handler do Usuário');
         const target = event.target;
         const value = target.value;
         this.setState({
@@ -57,30 +44,28 @@ export default class Login extends Component{
     async handleInputSubmit(event) {
         event.preventDefault();
 
-        console.log(this.state);
-        const data = await this.login();
+        const response = await this.login();
         
-        console.log(data);
-        
-        if (data.auth) {
-            localStorage.setItem("tokenlabCalendar/userID", data.idUser);
-            localStorage.setItem("tokenlabCalendar/token", data.token);
+        if (response.auth) {
+            localStorage.setItem("tokenlabCalendar/userID", response.idUser);
+            localStorage.setItem("tokenlabCalendar/token", response.token);
             this.props.history.push("/main");
         } else {
             this.setState({
                 message: "Usuário ou Senhas Inválidos."
-            })
+            });
         }
         
     }
 
     login = async () => {
-        const { data } = await api.post("/login", 
+        const response = await api.post("/login", 
             {
                 login: this.state.usr_name,
                 password: this.state.usr_password
             }
         );
+        const data = response.data;
 
         return data;
     }
@@ -91,7 +76,6 @@ export default class Login extends Component{
 
     render() {
         return (
-
 
             <LoginUi 
                 usernameHandler={this.handleChangeUserName}
