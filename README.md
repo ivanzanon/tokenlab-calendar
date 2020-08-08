@@ -1,12 +1,12 @@
-# tokenlab-calendar
-Calendar APP for TokenLab
-
-A Calendar APP to mandage events for Users.
-
+## tokenlab-calendar
+A Web module for a Calendar APP to manage events for Users. This is part od the TokenLab challenge for a working process.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+---------
+## React Default Instructions: 
+
+# Available Scripts
 
 In the project directory, you can run:
 
@@ -72,3 +72,17 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+----------
+
+O desafio consiste em fazer um sistema web de calendário de eventos com backend e frontend.
+
+Caso você seja candidato a CLT, será obrigatório ser desenvolvido na arquitetura REST, e caso você seja candidato a estagiário, a arquitetura REST é opcional, porém será considerada como um diferencial.
+
+O sistema deverá prover as seguintes funcionalidades: ▪ Login para acesso ao sistema; ▪ Adição de eventos; ▪ Edição de eventos; ▪ Remoção de eventos; ▪ Listagem de eventos;
+
+Os atributos necessários para o evento são: ▪ Descrição; ▪ Hora de início; ▪ Hora de termino;
+
+Os atributos a seguir não são obrigatórios, porém serão considerados como um diferencial na seleção do candidato: ▪ Eventos com duração de mais de um dia; ▪ Não deixar sobrescrever eventos e caso ocorra, emitir um alerta para o usuário; ▪ Suporte a vários usuários; ▪ Caso haja suporte a vários usuários, também poderá ser implementado o convite a outros usuários para eventos, ou seja, o evento aparecerá no calendário do usuário convidado e o usuário convidado poderá responder se poderá participar ou não (RSVP); ▪ Responsividade, assim como o uso de Bootstrap ou outro framework CSS; ▪ Frontend renderizado no lado do cliente;
+
+Poderá ser utilizada a linguagem e o banco de dados de preferência do desenvolvedor, bem como o uso de frameworks fica à escolha do candidato, porém recomendamos o uso de Angular no frontend. Não será necessário fazer deploy em servidor, apenas apresentação na máquina do candidato ou envio antecipado do código com instrução para rodar a aplicação.
